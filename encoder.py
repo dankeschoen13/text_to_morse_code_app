@@ -9,13 +9,13 @@ class Encoder:
 
     def morsify(self, message):
         char_list = list(message.upper())
-        morse_code = ", ".join(
+        morse_code = " ".join(
             self.data.reindex(char_list)
             .iloc[:, 0]
             .fillna('')
             .tolist()
         )
-        return morse_code
+        return morse_code if message else None
 
 # Testing area:
-print(Encoder().morsify(message='Hello!'))
+# print(Encoder().morsify(message='Hello!'))
