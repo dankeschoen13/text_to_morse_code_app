@@ -1,5 +1,5 @@
 import pandas as pd
-from tkinter import *
+from customtkinter import *
 
 FONT = ("Arial", 20)
 SOUR = "#8681BD"
@@ -7,17 +7,17 @@ SOUR = "#8681BD"
 data = pd.read_csv('code.csv', header=None, names=['char', 'code'])
 print(data)
 
-window = Tk()
-window.title("Morse Code Converter 1.0")
-window.minsize(400, 400)
-window.config(pady=50, padx=50, background=SOUR)
+app = CTk()
+app.title("Morse Code Converter 1.0")
+app.minsize(400, 400)
+app.config(pady=50, padx=50, background=SOUR)
 
-window.grid_columnconfigure(0, weight=1)
-window.grid_columnconfigure(1, weight=2)
-window.grid_columnconfigure(2, weight=1)
+app.grid_columnconfigure(0, weight=1)
+app.grid_columnconfigure(1, weight=2)
+app.grid_columnconfigure(2, weight=1)
 
-textarea_label = Label(
-    window,
+textarea_label = CTkLabel(
+    app,
     text="Enter your message here:",
     padx=10,
     pady=10,
@@ -26,19 +26,19 @@ textarea_label = Label(
 )
 textarea_label.grid(column=1, row=0, sticky='n')
 
-textarea = Text(
-    window,
+textarea = CTkTextbox(
+    app,
     width=30,
     height=10
 )
 textarea.grid(column=1, row=1, sticky='n')
 
-submit = Button(
-    window,
+submit = CTkButton(
+    app,
     text="Enter",
     font=FONT,
     width=5,
 )
 submit.grid(column=1, row=3, sticky='s')
 
-window.mainloop()
+app.mainloop()
