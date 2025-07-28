@@ -8,20 +8,10 @@ APP_BG = "#1E201E"
 TAB1_COLOR = "#56021F"
 TAB2_COLOR = "#004030"
 BUTTON_COLOR = "#471396"
+DEFAULT_OUTPUT = "🙄"
 
 # === FUNCTIONS ===
 encoder = Encoder()
-
-def run_encoding():
-    encode_output.delete("1.0", "end")
-    message = encode_input.get('1.0', 'end-1c')
-    morse_code = encoder.morsify(message)
-    if morse_code:
-        encode_feedback.configure(text="Success!")
-        encode_output.insert('end', morse_code)
-    else:
-        encode_feedback.configure(text="Please input a message!")
-        encode_output.insert('end', "🙄")
 
 def create_ui(parent, tab_color, command, action):
     parent.grid_columnconfigure(0, weight=1)
@@ -43,7 +33,7 @@ def create_ui(parent, tab_color, command, action):
     )
     input_area.grid(column=0, row=1, sticky='n')
 
-    submit = CTkButton(
+    submit_button = CTkButton(
         parent,
         text=action,
         font=BUTTON_FONT,
@@ -52,7 +42,7 @@ def create_ui(parent, tab_color, command, action):
         fg_color=BUTTON_COLOR,
         command=command
     )
-    submit.grid(column=0, row=3, sticky='s', pady=(15, 15))
+    submit_button.grid(column=0, row=3, sticky='s', pady=(15, 15))
 
     output_area = CTkTextbox(
         parent,
@@ -61,16 +51,38 @@ def create_ui(parent, tab_color, command, action):
     )
     output_area.grid(column=0, row=4, sticky='n')
 
-    output_label = CTkLabel(
+    output_feedback = CTkLabel(
         parent,
         text="",
         padx=10,
         pady=10,
         font=LABEL_FONT,
     )
-    output_label.grid(column=0, row=5, sticky='n')
+    output_feedback.grid(column=0, row=5, sticky='n')
 
-    return output_area, output_label, input_area
+    return input_area, output_area, output_feedback
+
+
+def initialize():
+    current_tab = tabview.get()
+    input_field, output_field, feedback = widgets[current_tab]
+
+    output_field.delete("1.0", "end")
+    message = input_field.get('1.0', 'end-1c')
+
+    if not message:
+        feedback.configure(text="Please input a message!")
+        output_field.insert('end', text=DEFAULT_OUTPUT)
+        return None
+
+    if current_tab == 'Encode':
+        output_field.insert('end', text=encoder.morsify(message))
+    elif current_tab == 'Decode':
+        output_field.insert('end', text=encoder.demorsify(message))
+
+    feedback.configure(text="Success!")
+    return None
+
 
 # === USER INTERFACE ===
 app = CTk()
@@ -86,7 +98,9 @@ tabview.grid(column=0, row=0)
 encode_tab = tabview.add("Encode")
 decode_tab = tabview.add("Decode")
 
-encode_output, encode_feedback, encode_input = create_ui(encode_tab, TAB1_COLOR, run_encoding, "MAKE MORSE")
-decode_output, decode_feedback, decode_input = create_ui(decode_tab, TAB2_COLOR, run_encoding, "UN-MORSE")
+widgets = dict()
+
+widgets['Encode'] = create_ui(encode_tab, TAB1_COLOR, initialize, "MAKE MORSE")
+widgets['Decode'] = create_ui(decode_tab, TAB2_COLOR, initialize, "UN-MORSE")
 
 app.mainloop()
