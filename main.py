@@ -86,7 +86,7 @@ def initialize():
 
 # === USER INTERFACE ===
 app = CTk()
-app.title("Morse Code Converter 1.1")
+app.title("Morse-ify 1.1")
 app.minsize(400, 400)
 app.config(pady=50, padx=50, background=APP_BG)
 app.grid_columnconfigure(0, weight=1)
